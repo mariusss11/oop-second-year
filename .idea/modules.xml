@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Encapsulation/Encapsulation.iml" filepath="$PROJECT_DIR$/Encapsulation/Encapsulation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Exceptions/Exceptions.iml" filepath="$PROJECT_DIR$/Exceptions/Exceptions.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/POO.iml" filepath="$PROJECT_DIR$/.idea/POO.iml" />
       <module fileurl="file://$PROJECT_DIR$/Polimorfism/Polimorfism.iml" filepath="$PROJECT_DIR$/Polimorfism/Polimorfism.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lab4/lab4.iml" filepath="$PROJECT_DIR$/lab4/lab4.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lab5/lab5.iml" filepath="$PROJECT_DIR$/lab5/lab5.iml" />
-      <module fileurl="file://$PROJECT_DIR$/studiulIndividual/studiuIndividual.iml" filepath="$PROJECT_DIR$/studiulIndividual/studiuIndividual.iml" />
+      <module fileurl="file://$PROJECT_DIR$/StudiulIndividual1/StudiulIndividual1.iml" filepath="$PROJECT_DIR$/StudiulIndividual1/StudiulIndividual1.iml" />
     </modules>
   </component>
 </project>
