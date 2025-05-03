@@ -29,7 +29,7 @@ class Film {
 
             film = new Film(titlu, durata, rating);
         } catch (Exception e) {
-            System.out.println(e.printStackTrace(););
+            System.out.println(e.getMessage());
         }
     }
 }
