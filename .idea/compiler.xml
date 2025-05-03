@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Interfece" />
+        <module name="static" />
+        <module name="string" />
+        <module name="Abstract" />
+        <module name="mostenire" />
+        <module name="second" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="StudiuIndividual" target="23" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
