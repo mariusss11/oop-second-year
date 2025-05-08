@@ -9,6 +9,7 @@
         <module name="StudiulIndividual2" />
         <module name="Interfece" />
         <module name="Abstract" />
+        <module name="Generics" />
         <module name="mostenire" />
       </profile>
     </annotationProcessing>
