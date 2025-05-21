@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: DeliveryApp
+
+  datasource:
+    url: jdbc:sqlserver://learning-azure-in-school.database.windows.net:1433;database=delivery-company;user=teacher@learning-azure-in-school;password=Lia.11092007;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+

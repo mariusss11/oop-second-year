@@ -6,16 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Abstract" />
+        <module name="mostenire" />
         <module name="StudiulIndividual2" />
         <module name="Interfece" />
-        <module name="Abstract" />
+        <module name="String" />
+        <module name="Static" />
         <module name="Generics" />
-        <module name="mostenire" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Static" target="23" />
-      <module name="String" target="23" />
       <module name="StudiuIndividual" target="23" />
     </bytecodeTargetLevel>
   </component>
