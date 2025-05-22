@@ -302,6 +302,9 @@ void excludeColumn() {
 }
 
 void countPossibleWays() {
+    clear();
+    printMatrix();
+    cout << " ======== SOLVING THE WATER PROBLEM ========.\n";
     int ways[100][100] = {0}; 
     int startX, startY, endX, endY;
 
@@ -371,17 +374,8 @@ void countPossibleWays() {
         }
     }
 
-    // Show the ways matrix (optional)
-    cout << "\nWays matrix:\n";
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            cout << ways[i][j] << " ";
-        }
-        cout << endl;
-    }
-
     cout << "\nNumber of ways from (" << startX + 1 << "," << startY + 1 
-         << ") to (" << endX + 1 << "," << endY + 1 << ") is: " << ways[endX][endY] << endl;
+        << ") to (" << endX + 1 << "," << endY + 1 << ") is: " << ways[endX][endY] << endl;
 }
 
 
