@@ -126,8 +126,20 @@ void countIslands() {
 }
 
 
-bool validNumber(int x) {
+bool validMatrixNumber(int x) {
     return (x == 1 || x == 0);
+}
+
+bool validNumber(const string &str)
+{
+    for (char ch : str)
+    {
+        if (!isdigit(ch))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 void addNewLine() {
@@ -144,7 +156,7 @@ void addNewLine() {
         int x;
         while (true) {
             cin >> x;
-            if (validNumber(x)) {
+            if (validMatrixNumber(x)) {
                 newLine[i] = x;
                 break;        
             }
@@ -197,7 +209,7 @@ void addNewColumn() {
         int x;
         while (true) {
             cin >> x;
-            if (validNumber(x)) {
+            if (validMatrixNumber(x)) {
                 newColoumn[i] = x;
                 break;        
             }
@@ -290,8 +302,88 @@ void excludeColumn() {
 }
 
 void countPossibleWays() {
+    int ways[100][100] = {0}; 
+    int startX, startY, endX, endY;
 
+    // Input start point
+    while (true) {
+        cout << "Enter the start position (x y): ";
+        int x, y;
+        cin >> x >> y;
+        if (x <= 0 || x > n || y <= 0 || y > m) {
+            cout << "Position out of bounds, try again.\n";
+            continue;
+        }
+        if (a[x - 1][y - 1] == 0) {
+            cout << "Start position is water, try again.\n";
+            continue;
+        }
+        startX = x - 1;
+        startY = y - 1;
+        break;
+    }
+
+    // Input end point
+    while (true) {
+        cout << "Enter the end position (x y): ";
+        int x, y;
+        cin >> x >> y;
+        if (x <= 0 || x > n || y <= 0 || y > m) {
+            cout << "Position out of bounds, try again.\n";
+            continue;
+        }
+        if (a[x - 1][y - 1] == 0) {
+            cout << "End position is water, try again.\n";
+            continue;
+        }
+        endX = x - 1;
+        endY = y - 1;
+        break;
+    }
+
+    // Ensure start is above-left of end for right/down DP
+    if (startX > endX || startY > endY) {
+        cout << "Start must be above/left of end (for down-right DP).\n";
+        return;
+    }
+
+    printMatrix();
+    cout << "Start position: (" << startX + 1 << ", " << startY + 1 << ")" << endl;
+    cout << "End position: (" << endX + 1 << ", " << endY + 1 << ")" << endl;
+
+    // Base case
+    ways[startX][startY] = 1;
+
+    // Dynamic Programming
+    for (int i = startX; i <= endX; i++) {
+        for (int j = startY; j <= endY; j++) {
+            if (i == startX && j == startY) continue;
+
+            if (a[i][j] == 0) {
+                ways[i][j] = 0; // water — cannot go here
+                continue;
+            }
+
+            int fromTop = (i > startX) ? ways[i - 1][j] : 0;
+            int fromLeft = (j > startY) ? ways[i][j - 1] : 0;
+
+            ways[i][j] = fromTop + fromLeft;
+        }
+    }
+
+    // Show the ways matrix (optional)
+    cout << "\nWays matrix:\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cout << ways[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    cout << "\nNumber of ways from (" << startX + 1 << "," << startY + 1 
+         << ") to (" << endX + 1 << "," << endY + 1 << ") is: " << ways[endX][endY] << endl;
 }
+
 
 
 
