@@ -3,6 +3,7 @@
 #include <utility>
 #include <iomanip>
 #include <limits>
+#include <cstdlib>  // for system()
 
 using namespace std;
 
@@ -12,23 +13,43 @@ bool viz[MAX][MAX];
 int n, m;
 int nrInsule = 0;
 
+void clear() {  
+#ifdef _WIN32
+    system("cls");    
+#else
+    system("clear"); 
+#endif
+}
+
 void waitForEnter() {
     cout << "Apasati Enter pentru a continua...";
     cin.ignore(numeric_limits<int>::max(), '\n');
     while (cin.get() != '\n') {
         cout << "Va rog apasati doar enter...";
         cin.ignore(numeric_limits<int>::max(), '\n');
-
     }
+    system("clear");
 }
 
 void printMatrix() {
-    cout << "Matricea este: " << endl;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             cout << a[i][j] << " ";
         }
         cout << endl;
+    }
+}
+
+void printMatrixInFile() {
+    ofstream fout("insule.in");
+    cout << "THE NEW MATRIX IS BEING WRITEN IN THE FILE: " << endl;
+
+    fout << n << " " << m << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            fout << a[i][j] << " ";
+        }
+        fout << endl;
     }
 }
 
@@ -50,7 +71,7 @@ void readIslands() {
     printMatrix();
 }
 
-void printTheNewMatrix(int n, int m) {
+void printTheMatrixInFile(int n, int m) {
     ofstream fout("insule.out");
 
     fout << n << m << endl;
@@ -64,34 +85,46 @@ void printTheNewMatrix(int n, int m) {
     
 }
 
-void DFS(int i, int j) {
-    if (i < 0 || i >= n || j < 0 || j >= m) return;       // în afara matricei
-    if (a[i][j] == 0 || viz[i][j]) return;                // e apă sau deja vizitat
+int DFS(int i, int j) {
+    if (i < 0 || i >= n || j < 0 || j >= m) return 0;       // în afara matricei
+    if (a[i][j] == 0 || viz[i][j]) return 0;                // apă sau deja vizitat
 
     viz[i][j] = true;
 
-    // Verificăm în 4 direcții
-    DFS(i - 1, j); // sus
-    DFS(i + 1, j); // jos
-    DFS(i, j - 1); // stânga
-    DFS(i, j + 1); // dreapta
+    int size = 1; // această celulă
 
+    // Verificăm în 4 direcții
+    size += DFS(i - 1, j); // sus
+    size += DFS(i + 1, j); // jos
+    size += DFS(i, j - 1); // stânga
+    size += DFS(i, j + 1); // dreapta
+
+    return size;
 }
 
 void countIslands() {
+    clear();
+    printMatrix();
+    int nrInsule = 0;
+    int maxSize = 0;
+
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             if (a[i][j] == 1 && !viz[i][j]) {
-                DFS(i, j);
+                int currentSize = DFS(i, j);
                 nrInsule++;
+
+                if (currentSize > maxSize)
+                    maxSize = currentSize;
             }
-            
         }
     }
 
-    cout << "Numarul total de insule este: ";
-    cout << nrInsule << endl;  
+    cout << "Numarul total de insule este: " << nrInsule << endl;
+    cout << "Dimensiunea celei mai mari insule este: " << maxSize << endl;
+    waitForEnter();
 }
+
 
 bool validNumber(int x) {
     return (x == 1 || x == 0);
@@ -129,32 +162,36 @@ void addNewLine() {
     cout << "Matrix before: " << endl;
     printMatrix();
 
-    n++;
-    for (int i = n - 1; i >= lineNum; i--) {
+    // Shift rows down
+    for (int i = n; i > lineNum; i--) {
         for (int j = 0; j < m; j++) {
-            // cout << "From " << i << " " << j << " -> " << (i+1) << " " << j << endl;
-            a[i+1][j] = a[i][j];
+            a[i][j] = a[i - 1][j];
         }
     }
 
-    for (int i = lineNum; i < m; i++){
+    // Insert new line
+    for (int i = 0; i < m; i++) {
         a[lineNum][i] = newLine[i];
     }
 
-    cout << "The new matrix is: ";
-    printMatrix();   
-    
+    n++; // Increase row count
+
+    cout << "The new matrix is: " << endl;
+    printMatrix();  
+
+    printMatrixInFile();
 }
 
 void addNewColumn() {
+    clear();
     int coloumnNum;
-    cout << "Enter which coloumn you want to add: ";
+    cout << "Enter which column you want to add: ";
     cin >> coloumnNum;
     coloumnNum--;
 
-    int newColoumn[m];
+    int newColoumn[n];
 
-    cout << "Enter the numbers of the new coloumn: " << endl;
+    cout << "Enter the numbers of the new column: " << endl;
     for (int i = 0; i < n; i++) {
         cout << "Enter element no. " << (i + 1) << " : "; 
         int x;
@@ -164,7 +201,6 @@ void addNewColumn() {
                 newColoumn[i] = x;
                 break;        
             }
-
             cout << "Please enter a valid number: ";
         }        
     }
@@ -172,26 +208,87 @@ void addNewColumn() {
     cout << "The new column is: " << endl;
     for (int i = 0; i < n; i++) {
         cout << newColoumn[i] << endl;
-
     }
     cout << endl;
 
     cout << "Matrix before: " << endl;
     printMatrix();
 
-    m++;
+    // Shift columns to the right
     for (int i = 0; i < n; i++) {
-        for (int j = m; j >= coloumnNum ; j--) {
-            cout << "From " << i << " " << j << " -> " << i << " " << (j+i) << endl;
+        for (int j = m; j > coloumnNum; j--) {
             a[i][j] = a[i][j - 1];
         }
     }
 
-    for (int i = coloumnNum; i < n; i++) {
+    // Insert new column
+    for (int i = 0; i < n; i++) {
         a[i][coloumnNum] = newColoumn[i];
     }
 
-    cout << "The new matrix is: ";
+    m++; // Increase column count after insertion
+
+    cout << "The new matrix is: " << endl;
     printMatrix();   
+
+    printMatrixInFile();
+    waitForEnter();
+}
+
+
+void excludeLine() {
+    clear();
+    printMatrix();
+    int lineNum;
+    cout << "Enter which line you want to exclude: ";
+    cin >> lineNum;
+    lineNum--;
+
+    if (lineNum < 0 || lineNum >= n) {
+        cout << "Invalid line number." << endl;
+        return;
+    }
+
+    // Shift all rows after lineNum up by one
+    for (int i = lineNum; i < n - 1; i++) {
+        for (int j = 0; j < m; j++) {
+            a[i][j] = a[i + 1][j];
+        }
+    }
+
+    n--; // Decrement the row count
+
+    cout << "Matrix after excluding line " << (lineNum + 1) << ":" << endl;
+    printMatrix();
+}
+
+
+void excludeColumn() {
+    clear();
+    printMatrix();
+    int colNum;
+    cout << "Enter which column you want to exclude: ";
+    cin >> colNum;
+    colNum--;
+
+    if (colNum < 0 || colNum >= m) {
+        cout << "Invalid column number." << endl;
+        return;
+    }
+
+    // Shift all columns after colNum left by one
+    for (int i = 0; i < n; i++) {
+        for (int j = colNum; j < m - 1; j++) {
+            a[i][j] = a[i][j + 1];
+        }
+    }
+
+    m--; // Decrement the column count
+
+    cout << "Matrix after excluding column " << (colNum + 1) << ":" << endl;
+    printMatrix();
+}
+
+void countPossibleWays() {
     
 }
