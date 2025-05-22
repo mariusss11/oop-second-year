@@ -290,5 +290,8 @@ void excludeColumn() {
 }
 
 void countPossibleWays() {
-    
+
 }
+
+
+
