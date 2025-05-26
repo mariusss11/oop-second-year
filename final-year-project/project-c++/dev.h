@@ -15,7 +15,7 @@ void program() {
         cout << "3. Exclude o line\n";
         cout << "4. Exclude o coloana\n";
         cout << "5. Numarul de insule si marimea celei mai mari insule\n";
-        cout << "6. Găseşte numarul de solutii posibile de la o insula la alta\n";
+        cout << "6. Găseşte numarul de solutii posibile pana la un punct din arhipelag\n";
         // cout << "2. Exclude un rând / o coloană\n";
         // cout << "3. Determină numărul de unităţi dintr-o linie / coloană\n";
         // cout << "4. Afişează coloanele în ordinea descendentă a numărului de unităţi\n";

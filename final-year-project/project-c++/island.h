@@ -104,7 +104,6 @@ int DFS(int i, int j) {
 
 void countIslands() {
     clear();
-    printMatrix();
     int nrInsule = 0;
     int maxSize = 0;
 
@@ -120,8 +119,9 @@ void countIslands() {
         }
     }
 
-    cout << "Numarul total de insule este: " << nrInsule << endl;
-    cout << "Dimensiunea celei mai mari insule este: " << maxSize << endl;
+    cout << " ======= ISLANDS =======\n";
+    cout << "Total number of islands: " << nrInsule << endl;
+    cout << "The size of the biggest island: " << maxSize << endl;
     waitForEnter();
 }
 
@@ -301,30 +301,54 @@ void excludeColumn() {
     printMatrix();
 }
 
+void getEasiestPath(int endX, int endY, int ways[100][100]) {
+    ofstream fout("insule.out");
+
+    if (endX < 0 || endY < 0 || a[endX][endY] == 0) {
+        cout << "No path to the end position.\n";
+        return;
+    }
+
+    int i = endX, j = endY;
+    int length = 0;
+
+    int path[100][2] = {0};
+
+    cout << "Easiest path to (" << endX + 1 << ", " << endY + 1 << "): ";
+    
+    while (i != 0 || j != 0) {
+        path[length][0] = i;
+        path[length][1] = j;
+        length++;
+
+        if (i > 0 && ways[i - 1][j] > 0) {
+            i--; // move up
+        } else if (j > 0 && ways[i][j - 1] > 0) {
+            j--; // move left
+        } else {
+            cout << "No valid path found.\n";
+            return;
+        }
+    }
+
+    cout << "The number path is being written in the insule.out file: " << endl;
+        
+    // Print in reverse (from start to end)
+    fout << "Number of total solutions: " << ways[endX][endY] << endl;
+    fout << "Easiest path: " << endl;
+    for (int k = length - 1; k >= 0; k--) {
+        fout << path[k][0] + 1 << " " << path[k][1] + 1 << endl;
+    }
+    fout << "Number of steps: " << length << endl;    
+}
+
+
 void countPossibleWays() {
     clear();
-    printMatrix();
+    // printMatrix();
     cout << " ======== SOLVING THE WATER PROBLEM ========.\n";
     int ways[100][100] = {0}; 
-    int startX, startY, endX, endY;
-
-    // Input start point
-    while (true) {
-        cout << "Enter the start position (x y): ";
-        int x, y;
-        cin >> x >> y;
-        if (x <= 0 || x > n || y <= 0 || y > m) {
-            cout << "Position out of bounds, try again.\n";
-            continue;
-        }
-        if (a[x - 1][y - 1] == 0) {
-            cout << "Start position is water, try again.\n";
-            continue;
-        }
-        startX = x - 1;
-        startY = y - 1;
-        break;
-    }
+    int endX, endY;
 
     // Input end point
     while (true) {
@@ -344,39 +368,46 @@ void countPossibleWays() {
         break;
     }
 
-    // Ensure start is above-left of end for right/down DP
-    if (startX > endX || startY > endY) {
-        cout << "Start must be above/left of end (for down-right DP).\n";
-        return;
-    }
-
     printMatrix();
-    cout << "Start position: (" << startX + 1 << ", " << startY + 1 << ")" << endl;
     cout << "End position: (" << endX + 1 << ", " << endY + 1 << ")" << endl;
 
     // Base case
-    ways[startX][startY] = 1;
+    ways[0][0] = 1;
 
     // Dynamic Programming
-    for (int i = startX; i <= endX; i++) {
-        for (int j = startY; j <= endY; j++) {
-            if (i == startX && j == startY) continue;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
 
             if (a[i][j] == 0) {
                 ways[i][j] = 0; // water — cannot go here
                 continue;
             }
-
-            int fromTop = (i > startX) ? ways[i - 1][j] : 0;
-            int fromLeft = (j > startY) ? ways[i][j - 1] : 0;
-
-            ways[i][j] = fromTop + fromLeft;
+            
+            if (i > 0 && j > 0){
+                ways[i][j] = ways[i - 1][j] + ways[i][j - 1];
+            } else if (i > 0) {
+                ways[i][j] = ways[i - 1][j]; // can only come from above
+            } else if (j > 0) {
+                ways[i][j] = ways[i][j - 1]; // can only come from the left
+            }
+            
         }
     }
 
-    cout << "\nNumber of ways from (" << startX + 1 << "," << startY + 1 
-        << ") to (" << endX + 1 << "," << endY + 1 << ") is: " << ways[endX][endY] << endl;
+    int numberOfWays = ways[endX][endY];
+
+    if (numberOfWays == 0) 
+        cout << "No way to reach the end position because of the water.\n";
+    else 
+        cout << "Number of ways to reach the end position (" << endX + 1 << ", " << endY + 1 << ") is: " << numberOfWays << endl;
+    
+
+    if (numberOfWays != 0)
+        getEasiestPath(endX, endY, ways);
+
+    waitForEnter();
 }
+
 
 
 
